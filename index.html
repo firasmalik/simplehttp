@@ -1,48 +1,76 @@
 <!DOCTYPE html>
 <html lang="en-US">
 <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.4/angular.min.js"></script>
+<style>
+.appl{
+  text-align: center;
+  font-size: 30px;
+  background-color: #e8e1d0;
+}
+button{
+  font-size:20px;
+}
+input{
+  font-size: 18px;
+  font-weight: bolder;
+}
+table, th, td {
+    border: 1px solid black;
+    margin-left:550px;
+    margin-top: 60px;
+    background-color:#8f9fba;
+
+
+}
+</style>
+
 
 
 <body>
-<div ng-app="MyApp" ng-controller="MyCtrl">
-<p><h1>Enter location</h1> <input type="text" ng-model="location"></p>
-<button ng-click="getProfile()">Find</button>
-<h1 ng-bind="location"></h1>
+<div ng-app="MyApp" ng-controller="MyCtrl" class="appl">
+    <p><h1>Enter location</h1>
+    <input type="text" ng-model="location"></p>
+    <button ng-click="getProfile()">Find</button>
+            <div >
+                <h1 ng-bind="location"></h1>
+            <table>
+
+                  <tr>
+                    <th>Lattitude</th>
+                    <th>Longitude</th>
+                  </tr>
+                  <tr>
+                   <td> <p>{{lats}} </p></td>
+                   <td> <p>{{long}}</p></td>
+
+                 </tr>
+            </table>
+      </div>
 </div>
 
 
 <script>
    var app=angular.module('MyApp', []);
-
-
-        app.controller('MyCtrl',function($scope, $http)
+         app.controller('MyCtrl',function($scope, $http)
          {
+           $scope.location='Srinagar';
 
-
-
-           $scope.location='srinagar';
            $scope.getProfile = function (){
            console.log("check click event");
            $http({
                     method : "GET",
                     url :"https://maps.googleapis.com/maps/api/geocode/json?address=$"+$scope.location
-                    }).then(function success(response)
-                    {
+                    }).then(function success(response){
+                      var x=true;
                       console.log('success');
-                      console.log(response);
-                    //  $scope.lat=response.results[0]['geometry']['location']['lat'];
+                      $scope.lats=response.data.results[0]['geometry']['location']['lat'];
+                      $scope.long=response.data.results[0]['geometry']['location']['lng'];
 
-                    // console.log($scope.lat);
-
-                    },function error(response) {
-                      console.log('error');
-
-                });
-            }
-
-          });
-
-
+                     },function error(response) {
+                       console.log('error');
+           });
+          }
+       });
 </script>
 </body>
 </html>
